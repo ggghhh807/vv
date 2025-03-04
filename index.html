@@ -93,6 +93,7 @@
     <p class="quote" id="quote">"السعادة قرار، لا تنتظرها!"</p>
     <button id="changeBtn">🎭 غير حالتي</button>
     <button id="musicBtn">🎵 تشغيل الموسيقى</button>
+    <audio id="music" src="https://www.bensound.com/bensound-music/bensound-sunny.mp3"></audio>
 
     <script>
         let emotions = [
@@ -118,6 +119,8 @@
 
         let index = 0;
         let count = 0;
+        let music = document.getElementById("music");
+        let isPlaying = false;
 
         function changeFace() {
             index = (index + 1) % emotions.length;
@@ -127,6 +130,15 @@
             document.getElementById('text').innerHTML = emotions[index].text;
             document.getElementById('quote').innerHTML = `"${emotions[index].quote}"`;
             document.getElementById('counter').innerHTML = count;
+        }
+
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+            } else {
+                music.play();
+            }
+            isPlaying = !isPlaying;
         }
 
         function updateClock() {
@@ -144,6 +156,7 @@
         }
 
         document.getElementById("changeBtn").addEventListener("click", changeFace);
+        document.getElementById("musicBtn").addEventListener("click", toggleMusic);
         setInterval(updateClock, 1000);
     </script>
 </body>
