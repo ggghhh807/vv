@@ -13,17 +13,24 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: url('74ae3235c384fb653f3101270cc46ba8.jpg') no-repeat center center/cover;
-
+            background: url('https://source.unsplash.com/1600x900/?galaxy,space') no-repeat center center/cover;
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
+            position: relative;
             overflow: hidden;
+        }
+
+        .clock {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
 
         .emoji {
             font-size: 120px;
             transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.8);
         }
 
         .change {
@@ -32,15 +39,28 @@
 
         @keyframes bounce {
             0% { transform: scale(1); }
-            50% { transform: scale(1.3); }
-            100% { transform: scale(1); }
+            50% { transform: scale(1.3) rotate(10deg); }
+            100% { transform: scale(1) rotate(-10deg); }
         }
 
         h1 {
-            margin-top: 20px;
             font-size: 28px;
             font-weight: bold;
             text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.7);
+            transition: opacity 0.5s;
+        }
+
+        p {
+            font-size: 20px;
+            margin-top: 5px;
+            color: yellow;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 18px;
+            color: #FFD700;
+            margin-top: 10px;
         }
 
         button {
@@ -54,21 +74,46 @@
             cursor: pointer;
             transition: 0.3s;
             font-weight: bold;
+            position: relative;
+            overflow: hidden;
         }
 
         button:hover {
             background-color: rgba(200, 0, 0, 0.9);
         }
 
-        button:active {
-            transform: scale(0.95);
+        /* مؤثرات الطقس */
+        .rain, .snow, .meteor {
+            position: absolute;
+            width: 5px;
+            height: 20px;
+            background: white;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            from { transform: translateY(-10vh); }
+            to { transform: translateY(110vh); }
         }
     </style>
 </head>
 <body>
+    <div class="clock" id="clock">🕒</div>
     <div class="emoji" id="emoji">😊</div>
     <h1 id="text">أنا سعيد 😊</h1>
+    <p>عدد مرات التغيير: <span id="counter">0</span></p>
+    <p class="quote" id="quote">"السعادة قرار، لا تنتظرها!"</p>
     <button id="changeBtn">🎭 غير حالتي</button>
+    <button id="musicBtn">🎵 تشغيل الموسيقى</button>
+
+    <audio id="sound">
+        <source src="https://www.fesliyanstudios.com/play-mp3/4389" type="audio/mpeg">
+    </audio>
+
+    <audio id="bgMusic" loop>
+        <source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg">
+    </audio>
 
     <script>
         let emotions = [
@@ -90,25 +135,55 @@
             { emoji: "🤬", text: "راني نطيح 🤬" },
             { emoji: "😭", text: "أنا أبكي بشدة 😭" },
             { emoji: "😜", text: "أنا أتصرف بجنون 😜" }
-        ];
+                ];
 
         let index = 0;
+        let count = 0;
+        let isPlaying = false;
+        let bgMusic = document.getElementById("bgMusic");
 
         function changeFace() {
             index = (index + 1) % emotions.length;
-            let emoji = document.getElementById('emoji');
-            let text = document.getElementById('text');
+            count++;
 
-            emoji.innerHTML = emotions[index].emoji;
-            text.innerHTML = emotions[index].text;
-            emoji.classList.add('change');
+            document.getElementById('emoji').innerHTML = emotions[index].emoji;
+            document.getElementById('text').innerHTML = emotions[index].text;
+            document.getElementById('quote').innerHTML = `"${emotions[index].quote}"`;
+            document.getElementById('counter').innerHTML = count;
 
-            setTimeout(() => emoji.classList.remove('change'), 500);
+            document.getElementById('sound').play();
         }
 
-        let button = document.getElementById("changeBtn");
-        button.addEventListener("click", changeFace);
-        button.addEventListener("touchstart", changeFace);
+        function updateClock() {
+            let now = new Date();
+            let timeString = now.toLocaleTimeString("ar-SA");
+            document.getElementById("clock").innerHTML = `🕒 ${timeString}`;
+        }
+
+        function toggleMusic() {
+            if (isPlaying) {
+                bgMusic.pause();
+                isPlaying = false;
+            } else {
+                bgMusic.play();
+                isPlaying = true;
+            }
+        }
+
+        function createWeatherEffect() {
+            for (let i = 0; i < 20; i++) {
+                let drop = document.createElement("div");
+                drop.classList.add(Math.random() > 0.5 ? "rain" : "snow");
+                drop.style.left = `${Math.random() * 100}vw`;
+                drop.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                document.body.appendChild(drop);
+            }
+        }
+
+        document.getElementById("changeBtn").addEventListener("click", changeFace);
+        document.getElementById("musicBtn").addEventListener("click", toggleMusic);
+        setInterval(updateClock, 1000);
+        createWeatherEffect();
     </script>
 </body>
 </html>
