@@ -13,7 +13,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: url('74ae3235c384fb653f3101270cc46ba8.jpg') no-repeat center center/cover;
+            background: url('https://source.unsplash.com/1600x900/?galaxy,stars') no-repeat center center/cover;
             color: white;
             font-family: Arial, sans-serif;
             text-align: center;
@@ -94,14 +94,6 @@
     <button id="changeBtn">🎭 غير حالتي</button>
     <button id="musicBtn">🎵 تشغيل الموسيقى</button>
 
-    <audio id="sound">
-        <source src="https://www.fesliyanstudios.com/play-mp3/4389" type="audio/mpeg">
-    </audio>
-
-    <audio id="bgMusic" loop>
-        <source src="https://www.fesliyanstudios.com/play-mp3/6532" type="audio/mpeg">
-    </audio>
-
     <script>
         let emotions = [
             { emoji: "😊", text: "أنا سعيد 😊" },
@@ -126,8 +118,6 @@
 
         let index = 0;
         let count = 0;
-        let isPlaying = false;
-        let bgMusic = document.getElementById("bgMusic");
 
         function changeFace() {
             index = (index + 1) % emotions.length;
@@ -137,8 +127,6 @@
             document.getElementById('text').innerHTML = emotions[index].text;
             document.getElementById('quote').innerHTML = `"${emotions[index].quote}"`;
             document.getElementById('counter').innerHTML = count;
-
-            document.getElementById('sound').play();
         }
 
         function updateClock() {
@@ -155,18 +143,7 @@
             document.getElementById("clock").innerHTML = `🕒 ${timeString}`;
         }
 
-        function toggleMusic() {
-            if (isPlaying) {
-                bgMusic.pause();
-                isPlaying = false;
-            } else {
-                bgMusic.play();
-                isPlaying = true;
-            }
-        }
-
         document.getElementById("changeBtn").addEventListener("click", changeFace);
-        document.getElementById("musicBtn").addEventListener("click", toggleMusic);
         setInterval(updateClock, 1000);
     </script>
 </body>
