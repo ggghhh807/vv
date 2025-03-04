@@ -22,9 +22,12 @@
         }
 
         .clock {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 8px;
         }
 
         .emoji {
@@ -67,39 +70,23 @@
             margin-top: 20px;
             padding: 15px 25px;
             font-size: 20px;
-            background-color: rgba(255, 0, 0, 0.8);
+            background-color: rgba(0, 123, 255, 0.8);
             color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             transition: 0.3s;
             font-weight: bold;
-            position: relative;
-            overflow: hidden;
         }
 
         button:hover {
-            background-color: rgba(200, 0, 0, 0.9);
+            background-color: rgba(0, 102, 204, 0.9);
         }
 
-        /* مؤثرات الطقس */
-        .rain, .snow, .meteor {
-            position: absolute;
-            width: 5px;
-            height: 20px;
-            background: white;
-            opacity: 0.7;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            from { transform: translateY(-10vh); }
-            to { transform: translateY(110vh); }
-        }
     </style>
 </head>
 <body>
-    <div class="clock" id="clock">🕒</div>
+    <div class="clock" id="clock">🕒 جاري تحميل الساعة...</div>
     <div class="emoji" id="emoji">😊</div>
     <h1 id="text">أنا سعيد 😊</h1>
     <p>عدد مرات التغيير: <span id="counter">0</span></p>
@@ -112,7 +99,7 @@
     </audio>
 
     <audio id="bgMusic" loop>
-        <source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg">
+        <source src="https://www.fesliyanstudios.com/play-mp3/6532" type="audio/mpeg">
     </audio>
 
     <script>
@@ -156,7 +143,16 @@
 
         function updateClock() {
             let now = new Date();
-            let timeString = now.toLocaleTimeString("ar-SA");
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+
+            let ampm = hours >= 12 ? "م" : "ص";
+            hours = hours % 12 || 12;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            let timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
             document.getElementById("clock").innerHTML = `🕒 ${timeString}`;
         }
 
@@ -170,20 +166,9 @@
             }
         }
 
-        function createWeatherEffect() {
-            for (let i = 0; i < 20; i++) {
-                let drop = document.createElement("div");
-                drop.classList.add(Math.random() > 0.5 ? "rain" : "snow");
-                drop.style.left = `${Math.random() * 100}vw`;
-                drop.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                document.body.appendChild(drop);
-            }
-        }
-
         document.getElementById("changeBtn").addEventListener("click", changeFace);
         document.getElementById("musicBtn").addEventListener("click", toggleMusic);
         setInterval(updateClock, 1000);
-        createWeatherEffect();
     </script>
 </body>
 </html>
